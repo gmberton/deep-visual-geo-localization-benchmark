@@ -1,5 +1,5 @@
 # Deep Visual Geo-localization Benchmark
-This is the official repository for the paper "Deep Visual Geo-localization Benchmark".
+This is the official repository for the CVPR 2022 paper "Deep Visual Geo-localization Benchmark".
 It can be used to reproduce results from the paper, and to compute a wide range of experiments, by changing the components of a Visual Geo-localization pipeline.
 Check out [_our website_](https://deep-vg-bench.herokuapp.com/)!
 
