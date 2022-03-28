@@ -345,4 +345,3 @@ We are currently exploring hosting options, so this is a partial list of models.
 		</tr>
 	</table>
 </details>
-# deep-visual-geo-localization-benchmark
