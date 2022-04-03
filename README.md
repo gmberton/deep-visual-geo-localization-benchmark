@@ -22,11 +22,7 @@ Before you begin experimenting with this toolbox, you should have a directory tr
                     ├── database
                     └── queries
 ```
-The `datasets_vg` repo can be used to download a number of datasets. Detailed instructions on how to download datasets are in the repo. Note that many datasets are available, and _pitts30k_ is just an example.
-Then move to this repo `$ cd benchmarking_vg`.
-and export the path of the datasets folder as an environment variable, as such
-
-`$ export DATASETS_FOLDER=../datasets_vg/datasets`
+The [datasets_vg](https://github.com/gmberton/datasets_vg) repo can be used to download a number of datasets. Detailed instructions on how to download datasets are in the repo. Note that many datasets are available, and _pitts30k_ is just an example.
 
 ## Running experiments
 ### Basic experiment

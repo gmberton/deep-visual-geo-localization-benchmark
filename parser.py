@@ -82,17 +82,21 @@ def parse_arguments():
     parser.add_argument("--random_resized_crop", type=float, default=None, help="_")
     parser.add_argument("--random_rotation", type=float, default=None, help="_")
     # Paths parameters
-    try:
-        parser.add_argument("--datasets_folder", type=str, default=os.environ['DATASETS_FOLDER'], help="Path with all datasets")
-    except KeyError:
-        raise Exception("!!!!!!!!!!!!!!!! You should export the DATASETS_FOLDER environment variable !!!!!!!!!!!!!!!! e.g. like this \n" +
-                        "    $ export DATASETS_FOLDER=../datasets_vg/datasets \n")
-    parser.add_argument("--dataset_name", type=str, default="pitts30k", help="Path of the dataset")
+    parser.add_argument("--datasets_folder", type=str, default=None, help="Path with all datasets")
+    parser.add_argument("--dataset_name", type=str, default="pitts30k", help="Relative path of the dataset")
     parser.add_argument("--pca_dataset_folder", type=str, default=None,
                         help="Path with images to be used to compute PCA (ie: pitts30k/images/train")
     parser.add_argument("--save_dir", type=str, default="default",
                         help="Folder name of the current run (saved in ./logs/)")
     args = parser.parse_args()
+    
+    if args.datasets_folder == None:
+        try:
+            args.datasets_folder = os.environ['DATASETS_FOLDER']
+        except KeyError:
+            raise Exception("You should set the parameter --datasets_folder or export " +
+                            "the DATASETS_FOLDER environment variable as such \n" +
+                            "export DATASETS_FOLDER=../datasets_vg/datasets")
     
     if args.aggregation == "crn" and args.resume == None:
         raise ValueError("CRN must be resumed from a trained NetVLAD checkpoint, but you set resume=None.")
