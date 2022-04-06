@@ -267,7 +267,7 @@ We are currently exploring hosting options, so this is a partial list of models.
 			<td>77.8</td> <td>35.3</td>
 			<td><a href="https://drive.google.com/file/d/1bHVsnb6Km2npBsGK9ylI1vuOuc3WLKJb/view?usp=sharing">[Link]</a></td>
 			<td>70.1</td><td>61.8</td>
-			<td>Coming Soon</td>
+			<td><a href="https://drive.google.com/file/d/1BbANLPVPxWDau2RP0cWTSS3FybbyUPL1/view?usp=sharing">[Link]</a></td>
 	 	</tr>
 		<tr>
 			<td> resnet18-gem-partial</td>
@@ -309,7 +309,7 @@ We are currently exploring hosting options, so this is a partial list of models.
 			<td>82.0</td> <td>38.0</td> 
 			<td><a href="https://drive.google.com/file/d/1quS9ZjOrXBqNDBhQzlSj8aeh3dBfP1GY/view?usp=sharing">[Link]</a></td>
 			<td>77.3</td> <td>69.7</td>
-			<td>Coming Soon</td>
+			<td><a href="https://drive.google.com/file/d/1pxU881eTcz_YdQthKz5yohU7WoLpXt8J/view?usp=sharing">[Link]</a></td>
 		</tr>
 		<tr>
 			<td> resnet50-gem-partial</td>
@@ -323,7 +323,7 @@ We are currently exploring hosting options, so this is a partial list of models.
 			<td>83.4</td> <td>45.0</td> 
 			<td><a href="https://drive.google.com/file/d/1TkzlO-ZS42u6e783y2O3JZhcIoI7CEVj/view?usp=sharing">[Link]</a></td>
 			<td>74.9</td> <td>63.6</td>
-			<td>Coming Soon</td>
+			<td><a href="https://drive.google.com/file/d/1E_X2nrnLxBqvLfVfNKtorOGW_VmwOqSu/view?usp=sharing">[Link]</a></td>
 		</tr>
 		<tr>
 			<td> resnet50-netvlad-full</td>
