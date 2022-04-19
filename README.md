@@ -3,7 +3,7 @@ This is the official repository for the CVPR 2022 (Oral) paper [Deep Visual Geo-
 It can be used to reproduce results from the paper, and to compute a wide range of experiments, by changing the components of a Visual Geo-localization pipeline.
 Check out [_our website_](https://deep-vg-bench.herokuapp.com/)!
 
-<img src="https://github.com/gmberton/gmberton.github.io/blob/main/images/vg_system.png" width="500">
+<img src="https://github.com/gmberton/gmberton.github.io/blob/main/images/vg_system.png" width="90%">
 https://github.com/gmberton/gmberton.github.io/blob/main/images/SF-XL%20map.jpghttps://github.com/gmberton/gmberton.github.io/blob/main/images/SF-XL%20map.jpg
 ## Setup
 Before you begin experimenting with this toolbox, your dataset should be organized in a directory tree as such:
