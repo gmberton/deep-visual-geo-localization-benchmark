@@ -4,7 +4,7 @@ It can be used to reproduce results from the paper, and to compute a wide range 
 Check out [_our website_](https://deep-vg-bench.herokuapp.com/)!
 
 ## Setup
-Before you begin experimenting with this toolbox, you should have a directory tree as such:
+Before you begin experimenting with this toolbox, your dataset should be organized in a directory tree as such:
 ```
 .
 ├── benchmarking_vg
