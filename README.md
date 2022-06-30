@@ -364,9 +364,9 @@ Parts of this repo are inspired by the following great repositories:
 - [NetVLAD's original code](https://github.com/Relja/netvlad) (in MATLAB)
 - [NetVLAD layer in PyTorch](https://github.com/lyakaap/NetVLAD-pytorch)
 - [NetVLAD training in PyTorch](https://github.com/Nanne/pytorch-NetVlad/)
-- [GeM](https://github.com/filipradenovic/cnnimageretrieval-pytorch)
+- [GeM layer](https://github.com/filipradenovic/cnnimageretrieval-pytorch)
 - [Deep Image Retrieval](https://github.com/naver/deep-image-retrieval)
-- [Mapillary](https://github.com/mapillary/mapillary_sls)
+- [Mapillary Street-level Sequences](https://github.com/mapillary/mapillary_sls)
 - [Compact Convolutional Transformers](https://github.com/SHI-Labs/Compact-Transformers)
 
 Check out also our other repo [_CosPlace_](https://github.com/gmberton/CosPlace), from the CVPR 2022 paper "Rethinking Visual Geo-localization for Large-Scale Applications", which provides a new SOTA in visual geo-localization / visual place recognition.
