@@ -181,6 +181,13 @@ We are currently exploring hosting options, so this is a partial list of models.
 			<td>80.8</td> <td>77.7</td>
 			<td><a href="https://drive.google.com/file/d/1rtPfsgfJ2Zoxs5uu7Ph1_qc7q-hIxJek/view?usp=sharing">[Link]</a></td>
 	 	</tr>
+		<tr>
+			<td>cct384-netvlad</td>
+			<td>85.0</td> <td>52.5</td>
+			<td><a href="https://drive.google.com/file/d/1Rx0oG4PG9bEraIg4y7e6Z24Q6b_TGr5u/view?usp=sharing">[Link]</a></td>
+			<td>80.3</td> <td>85.1</td>
+			<td><a href="https://drive.google.com/file/d/1wDZ6XRVYz6bcGe_p3Iiz2NfIe9MmZZMN/view?usp=sharing">[Link]</a></td>
+	 	</tr>
 	</table>
     
 </details>
