@@ -10,3 +10,7 @@ venv/
 .idea/
 __MACOSX/
 **/.DS_Store
+
+# other
+pretrained
+*.pth
