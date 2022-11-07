@@ -13,7 +13,7 @@ import numpy as np
 from os.path import join
 
 
-def make_deterministic(seed=0):
+def make_deterministic(seed=0, speedup=None):
     """Make results deterministic. If seed == -1, do not make deterministic.
     Running the script in a deterministic way might slow it down.
     """
@@ -24,7 +24,7 @@ def make_deterministic(seed=0):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.benchmark = True if speedup else False  # Provides a speedup
 
 
 def setup_logging(save_dir, console="debug",
