@@ -10,7 +10,6 @@ from os.path import join
 from datetime import datetime
 import torchvision.transforms as transforms
 from torch.utils.data.dataloader import DataLoader
-torch.backends.cudnn.benchmark= True  # Provides a speedup
 
 import util
 import test
@@ -26,7 +25,7 @@ args = parser.parse_arguments()
 start_time = datetime.now()
 args.save_dir = join("logs", args.save_dir, start_time.strftime('%Y-%m-%d_%H-%M-%S'))
 commons.setup_logging(args.save_dir)
-commons.make_deterministic(args.seed)
+commons.make_deterministic(args.seed, speedup=True)
 logging.info(f"Arguments: {args}")
 logging.info(f"The outputs are being saved in {args.save_dir}")
 logging.info(f"Using {torch.cuda.device_count()} GPUs and {multiprocessing.cpu_count()} CPUs")
@@ -91,10 +90,10 @@ if args.resume:
 else:
     best_r5 = start_epoch_num = not_improved_num = 0
 
-if args.backbone.startswith('vit'):
-    logging.info(f"Output dimension of the model is {args.features_dim}")
-else:
-    logging.info(f"Output dimension of the model is {args.features_dim}, with {util.get_flops(model, args.resize)}")
+# if args.backbone.startswith('vit'):
+#     logging.info(f"Output dimension of the model is {args.features_dim}")
+# else:
+#     logging.info(f"Output dimension of the model is {args.features_dim}, with {util.get_flops(model, args.resize)}")
 
 
 if torch.cuda.device_count() >= 2:
@@ -126,10 +125,13 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
                                  drop_last=True)
         
         model = model.train()
+
+        # for each caching period in one epoch, put every batch-loss in cache_losses
+        cache_losses = np.zeros((0, 1), dtype=np.float32)
         
         # images shape: (train_batch_size*12)*3*H*W ; by default train_batch_size=4, H=480, W=640
         # triplets_local_indexes shape: (train_batch_size*10)*3 ; because 10 triplets per query
-        for images, triplets_local_indexes, _ in tqdm(triplets_dl, ncols=100):
+        for images, triplets_local_indexes, _ in tqdm(triplets_dl, ncols=100, desc='Training'):
             
             # Flip all triplets or none
             if args.horizontal_flip:
@@ -168,15 +170,17 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
             loss_triplet.backward()
             optimizer.step()
             
-            # Keep track of all losses by appending them to epoch_losses
+            # Keep track of all triple-batch losses by appending them to cache_losses
             batch_loss = loss_triplet.item()
-            epoch_losses = np.append(epoch_losses, batch_loss)
+            cache_losses = np.append(cache_losses, batch_loss)
             del loss_triplet
         
         logging.debug(f"Epoch[{epoch_num:02d}]({loop_num}/{loops_num}): " +
-                      f"current batch triplet loss = {batch_loss:.4f}, " +
-                      f"average epoch triplet loss = {epoch_losses.mean():.4f}")
-    
+                      f"last batch triplet loss = {batch_loss:.4f}, " +
+                      f"current cache triplet loss = {cache_losses.mean():.4f}")
+        # epoch_losses should update after calculating cache_loss
+        epoch_losses = np.append(epoch_losses, cache_losses)
+
     logging.info(f"Finished epoch {epoch_num:02d} in {str(datetime.now() - epoch_start_time)[:-7]}, "
                  f"average epoch triplet loss = {epoch_losses.mean():.4f}")
     
@@ -188,9 +192,9 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
     
     # Save checkpoint, which contains all training parameters
     util.save_checkpoint(args, {"epoch_num": epoch_num, "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(), "recalls": recalls, "best_r5": best_r5,
-        "not_improved_num": not_improved_num
-    }, is_best, filename="last_model.pth")
+                                "optimizer_state_dict": optimizer.state_dict(), "recalls": recalls, "best_r5": best_r5,
+                                "not_improved_num": not_improved_num
+                                }, is_best, filename="last_model.pth")
     
     # If recall@5 did not improve for "many" epochs, stop training
     if is_best:
@@ -214,4 +218,3 @@ model.load_state_dict(best_model_state_dict)
 
 recalls, recalls_str = test.test(args, test_ds, model, test_method=args.test_method)
 logging.info(f"Recalls on {test_ds}: {recalls_str}")
-
