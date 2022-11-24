@@ -12,7 +12,6 @@ from model.cct import cct_14_7x2_384
 from model.aggregation import Flatten
 from model.normalization import L2Norm
 import model.aggregation as aggregation
-from model.non_local import NonLocalBlock
 
 # Pretrained models on Google Landmarks v2 and Places 365
 PRETRAINED_MODELS = {
@@ -35,7 +34,6 @@ class GeoLocalizationNet(nn.Module):
         self.backbone = get_backbone(args)
         self.arch_name = args.backbone
         self.aggregation = get_aggregation(args)
-        self.self_att = False
 
         if args.aggregation in ["gem", "spoc", "mac", "rmac"]:
             if args.l2 == "before_pool":
@@ -51,16 +49,9 @@ class GeoLocalizationNet(nn.Module):
                                              nn.Linear(args.features_dim, args.fc_output_dim),
                                              L2Norm())
             args.features_dim = args.fc_output_dim
-        if args.non_local:
-            non_local_list = [NonLocalBlock(channel_feat=get_output_channels_dim(self.backbone),
-                                           channel_inner=args.channel_bottleneck)]* args.num_non_local
-            self.non_local = nn.Sequential(*non_local_list)
-            self.self_att = True
 
     def forward(self, x):
         x = self.backbone(x)
-        if self.self_att:
-            x = self.non_local(x)
         if self.arch_name.startswith("vit"):
             x = x.last_hidden_state[:, 0, :]
             return x

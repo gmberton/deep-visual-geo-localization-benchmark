@@ -43,9 +43,6 @@ def parse_arguments():
                                                                                "cls", "seqpool", "none"])
     parser.add_argument('--netvlad_clusters', type=int, default=64, help="Number of clusters for NetVLAD layer.")
     parser.add_argument('--pca_dim', type=int, default=None, help="PCA dimension (number of principal components). If None, PCA is not used.")
-    parser.add_argument('--num_non_local', type=int, default=1, help="Num of non local blocks")
-    parser.add_argument("--non_local", action='store_true', help="_")
-    parser.add_argument('--channel_bottleneck', type=int, default=128, help="Channel bottleneck for Non-Local blocks")
     parser.add_argument('--fc_output_dim', type=int, default=None,
                         help="Output dimension of fully connected layer. If None, don't use a fully connected layer.")
     parser.add_argument('--pretrain', type=str, default="imagenet", choices=['imagenet', 'gldv2', 'places'],
