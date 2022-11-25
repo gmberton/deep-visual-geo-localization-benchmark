@@ -52,9 +52,6 @@ class GeoLocalizationNet(nn.Module):
 
     def forward(self, x):
         x = self.backbone(x)
-        if self.arch_name.startswith("vit"):
-            x = x.last_hidden_state[:, 0, :]
-            return x
         x = self.aggregation(x)
         return x
 
@@ -75,9 +72,7 @@ def get_aggregation(args):
         return aggregation.CRN(clusters_num=args.netvlad_clusters, dim=args.features_dim)
     elif args.aggregation == "rrm":
         return aggregation.RRM(args.features_dim)
-    elif args.aggregation == 'none'\
-            or args.aggregation == 'cls' \
-            or args.aggregation == 'seqpool':
+    elif args.aggregation in ['cls', 'seqpool']:
         return nn.Identity()
 
 
@@ -164,12 +159,11 @@ def get_backbone(args):
         args.features_dim = 384
         return backbone
     elif args.backbone.startswith("vit"):
+        assert args.resize[0] in [224, 384], f'Image size for ViT must be either 224 or 384, but it\'s {args.resize[0]}'
         if args.resize[0] == 224:
             backbone = ViTModel.from_pretrained('google/vit-base-patch16-224-in21k')
         elif args.resize[0] == 384:
             backbone = ViTModel.from_pretrained('google/vit-base-patch16-384')
-        else:
-            raise ValueError('Image size for ViT must be either 224 or 384')
 
         if args.trunc_te:
             logging.debug(f"Truncate ViT at transformers encoder {args.trunc_te}")
@@ -182,13 +176,26 @@ def get_backbone(args):
                 if int(name) > args.freeze_te:
                     for params in child.parameters():
                         params.requires_grad = True
+        backbone = VitWrapper(backbone, args.aggregation)
+        
         args.features_dim = 768
         return backbone
 
-    
     backbone = torch.nn.Sequential(*layers)
     args.features_dim = get_output_channels_dim(backbone)  # Dinamically obtain number of channels in output
     return backbone
+
+
+class VitWrapper(nn.Module):
+    def __init__(self, vit_model, aggregation):
+        super().__init__()
+        self.vit_model = vit_model
+        self.aggregation = aggregation
+    def forward(self, x):
+        if self.aggregation in ["netvlad", "gem"]:
+            return self.vit_model(x).last_hidden_state[:, 1:, :]
+        else:
+            return self.vit_model(x).last_hidden_state[:, 0, :]
 
 
 def get_output_channels_dim(model):
