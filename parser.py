@@ -40,7 +40,7 @@ def parse_arguments():
     parser.add_argument("--l2", type=str, default="before_pool", choices=["before_pool", "after_pool", "none"],
                         help="When (and if) to apply the l2 norm with shallow aggregation layers")
     parser.add_argument("--aggregation", type=str, default="netvlad", choices=["netvlad", "gem", "spoc", "mac", "rmac", "crn", "rrm",
-                                                                               "cls", "seqpool", "none"])
+                                                                               "cls", "seqpool"])
     parser.add_argument('--netvlad_clusters', type=int, default=64, help="Number of clusters for NetVLAD layer.")
     parser.add_argument('--pca_dim', type=int, default=None, help="PCA dimension (number of principal components). If None, PCA is not used.")
     parser.add_argument('--fc_output_dim', type=int, default=None,
@@ -116,5 +116,23 @@ def parse_arguments():
     if args.pca_dim != None and args.pca_dataset_folder == None:
         raise ValueError("Please specify --pca_dataset_folder when using pca")
     
+    if args.backbone == "vit":
+        if args.resize != [224, 224] and args.resize != [384, 384]:
+            raise ValueError(f'Image size for ViT must be either 224 or 384 {args.resize}')
+    if args.backbone == "cct384":
+        if args.resize != [384, 384]:
+            raise ValueError(f'Image size for CCT384 must be 384, but it is {args.resize}')
+    
+    if args.backbone in ["alexnet", "vgg16", "resnet18conv4", "resnet18conv5",
+                          "resnet50conv4", "resnet50conv5", "resnet101conv4", "resnet101conv5"]:
+        if args.aggregation in ["cls", "seqpool"]:
+            raise ValueError(f"CNNs like {args.backbone} can't work with aggregation {args.aggregation}")
+    if args.backbone in ["cct384"]:
+        if args.aggregation in ["spoc", "mac", "rmac", "crn", "rrm"]:
+            raise ValueError(f"CCT can't work with aggregation {args.aggregation}. Please use one among [netvlad, gem, cls, seqpool]")
+    if args.backbone == "vit":
+        if args.aggregation not in ["cls", "gem", "netvlad"]:
+            raise ValueError(f"ViT can't work with aggregation {args.aggregation}. Please use one among [netvlad, gem, cls]")
+
     return args
 
