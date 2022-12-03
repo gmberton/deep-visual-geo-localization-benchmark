@@ -30,7 +30,7 @@ def test_efficient_ram_usage(args, eval_ds, model, test_method="hard_resize"):
         eval_ds.test_method = test_method
         queries_subset_ds = Subset(eval_ds, list(range(eval_ds.database_num, eval_ds.database_num+eval_ds.queries_num)))
         queries_dataloader = DataLoader(dataset=queries_subset_ds, num_workers=args.num_workers,
-                                        batch_size=queries_infer_batch_size, pin_memory=(args.device=="cuda"))
+                                        batch_size=queries_infer_batch_size, pin_memory=(args.device == "cuda"))
         for inputs, indices in tqdm(queries_dataloader, ncols=100):
             if test_method == "five_crops" or test_method == "nearest_crop" or test_method == 'maj_voting':
                 inputs = torch.cat(tuple(inputs))  # shape = 5*bs x 3 x 480 x 480
@@ -52,7 +52,7 @@ def test_efficient_ram_usage(args, eval_ds, model, test_method="hard_resize"):
         eval_ds.test_method = "hard_resize"
         database_subset_ds = Subset(eval_ds, list(range(eval_ds.database_num)))
         database_dataloader = DataLoader(dataset=database_subset_ds, num_workers=args.num_workers,
-                                        batch_size=args.infer_batch_size, pin_memory=(args.device=="cuda"))
+                                         batch_size=args.infer_batch_size, pin_memory=(args.device == "cuda"))
         for inputs, indices in tqdm(database_dataloader, ncols=100):
             inputs = inputs.to(args.device)
             features = model(inputs)
@@ -122,7 +122,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
     """Compute features of the given dataset and compute the recalls."""
     
     assert test_method in ["hard_resize", "single_query", "central_crop", "five_crops",
-                            "nearest_crop", "maj_voting"], f"test_method can't be {test_method}"
+                           "nearest_crop", "maj_voting"], f"test_method can't be {test_method}"
     
     if args.efficient_ram_testing:
         return test_efficient_ram_usage(args, eval_ds, model, test_method)
@@ -134,7 +134,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         eval_ds.test_method = "hard_resize"
         database_subset_ds = Subset(eval_ds, list(range(eval_ds.database_num)))
         database_dataloader = DataLoader(dataset=database_subset_ds, num_workers=args.num_workers,
-                                        batch_size=args.infer_batch_size, pin_memory=(args.device=="cuda"))
+                                         batch_size=args.infer_batch_size, pin_memory=(args.device == "cuda"))
         
         if test_method == "nearest_crop" or test_method == 'maj_voting':
             all_features = np.empty((5 * eval_ds.queries_num + eval_ds.database_num, args.features_dim), dtype="float32")
@@ -144,7 +144,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         for inputs, indices in tqdm(database_dataloader, ncols=100):
             features = model(inputs.to(args.device))
             features = features.cpu().numpy()
-            if pca != None:
+            if pca is not None:
                 features = pca.transform(features)
             all_features[indices.numpy(), :] = features
         
@@ -153,7 +153,7 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
         eval_ds.test_method = test_method
         queries_subset_ds = Subset(eval_ds, list(range(eval_ds.database_num, eval_ds.database_num+eval_ds.queries_num)))
         queries_dataloader = DataLoader(dataset=queries_subset_ds, num_workers=args.num_workers,
-                                        batch_size=queries_infer_batch_size, pin_memory=(args.device=="cuda"))
+                                        batch_size=queries_infer_batch_size, pin_memory=(args.device == "cuda"))
         for inputs, indices in tqdm(queries_dataloader, ncols=100):
             if test_method == "five_crops" or test_method == "nearest_crop" or test_method == 'maj_voting':
                 inputs = torch.cat(tuple(inputs))  # shape = 5*bs x 3 x 480 x 480
@@ -161,12 +161,12 @@ def test(args, eval_ds, model, test_method="hard_resize", pca=None):
             if test_method == "five_crops":  # Compute mean along the 5 crops
                 features = torch.stack(torch.split(features, 5)).mean(1)
             features = features.cpu().numpy()
-            if pca != None:
+            if pca is not None:
                 features = pca.transform(features)
             
             if test_method == "nearest_crop" or test_method == 'maj_voting':  # store the features of all 5 crops
                 start_idx = eval_ds.database_num + (indices[0] - eval_ds.database_num) * 5
-                end_idx   = start_idx + indices.shape[0] * 5
+                end_idx = start_idx + indices.shape[0] * 5
                 indices = np.arange(start_idx, end_idx)
                 all_features[indices, :] = features
             else:

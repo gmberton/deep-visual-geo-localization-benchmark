@@ -34,7 +34,7 @@ def parse_arguments():
     parser.add_argument("--mining", type=str, default="partial", choices=["partial", "full", "random", "msls_weighted"])
     # Model parameters
     parser.add_argument("--backbone", type=str, default="resnet18conv4",
-                        choices=["alexnet", "vgg16", "resnet18conv4", "resnet18conv5", 
+                        choices=["alexnet", "vgg16", "resnet18conv4", "resnet18conv5",
                                  "resnet50conv4", "resnet50conv5", "resnet101conv4", "resnet101conv5",
                                  "cct384", "vit"], help="_")
     parser.add_argument("--l2", type=str, default="before_pool", choices=["before_pool", "after_pool", "none"],
@@ -62,7 +62,7 @@ def parse_arguments():
     parser.add_argument('--test_method', type=str, default="hard_resize",
                         choices=["hard_resize", "single_query", "central_crop", "five_crops", "nearest_crop", "maj_voting"],
                         help="This includes pre/post-processing methods and prediction refinement")
-    parser.add_argument("--majority_weight", type=float, default=0.01, 
+    parser.add_argument("--majority_weight", type=float, default=0.01,
                         help="only for majority voting, scale factor, the higher it is the more importance is given to agreement")
     parser.add_argument("--efficient_ram_testing", action='store_true', help="_")
     parser.add_argument("--val_positive_dist_threshold", type=int, default=25, help="_")
@@ -70,14 +70,14 @@ def parse_arguments():
     parser.add_argument('--recall_values', type=int, default=[1, 5, 10, 20], nargs="+",
                         help="Recalls to be computed, such as R@5.")
     # Data augmentation parameters
-    parser.add_argument("--brightness", type=float, default=None, help="_")
-    parser.add_argument("--contrast", type=float, default=None, help="_")
-    parser.add_argument("--saturation", type=float, default=None, help="_")
-    parser.add_argument("--hue", type=float, default=None, help="_")
-    parser.add_argument("--rand_perspective", type=float, default=None, help="_")
+    parser.add_argument("--brightness", type=float, default=0, help="_")
+    parser.add_argument("--contrast", type=float, default=0, help="_")
+    parser.add_argument("--saturation", type=float, default=0, help="_")
+    parser.add_argument("--hue", type=float, default=0, help="_")
+    parser.add_argument("--rand_perspective", type=float, default=0, help="_")
     parser.add_argument("--horizontal_flip", action='store_true', help="_")
-    parser.add_argument("--random_resized_crop", type=float, default=None, help="_")
-    parser.add_argument("--random_rotation", type=float, default=None, help="_")
+    parser.add_argument("--random_resized_crop", type=float, default=0, help="_")
+    parser.add_argument("--random_rotation", type=float, default=0, help="_")
     # Paths parameters
     parser.add_argument("--datasets_folder", type=str, default=None, help="Path with all datasets")
     parser.add_argument("--dataset_name", type=str, default="pitts30k", help="Relative path of the dataset")
@@ -87,7 +87,7 @@ def parse_arguments():
                         help="Folder name of the current run (saved in ./logs/)")
     args = parser.parse_args()
     
-    if args.datasets_folder == None:
+    if args.datasets_folder is None:
         try:
             args.datasets_folder = os.environ['DATASETS_FOLDER']
         except KeyError:
@@ -95,7 +95,7 @@ def parse_arguments():
                             "the DATASETS_FOLDER environment variable as such \n" +
                             "export DATASETS_FOLDER=../datasets_vg/datasets")
     
-    if args.aggregation == "crn" and args.resume == None:
+    if args.aggregation == "crn" and args.resume is None:
         raise ValueError("CRN must be resumed from a trained NetVLAD checkpoint, but you set resume=None.")
     
     if args.queries_per_epoch % args.cache_refresh_rate != 0:
@@ -113,7 +113,7 @@ def parse_arguments():
         if args.backbone not in ["resnet50conv5", "resnet101conv5"] or args.aggregation != "gem" or args.fc_output_dim != 2048:
             raise ValueError("Off-the-shelf models are trained only with ResNet-50/101 + GeM + FC 2048")
     
-    if args.pca_dim != None and args.pca_dataset_folder == None:
+    if args.pca_dim is not None and args.pca_dataset_folder is None:
         raise ValueError("Please specify --pca_dataset_folder when using pca")
     
     if args.backbone == "vit":
@@ -124,7 +124,7 @@ def parse_arguments():
             raise ValueError(f'Image size for CCT384 must be 384, but it is {args.resize}')
     
     if args.backbone in ["alexnet", "vgg16", "resnet18conv4", "resnet18conv5",
-                          "resnet50conv4", "resnet50conv5", "resnet101conv4", "resnet101conv5"]:
+                         "resnet50conv4", "resnet50conv5", "resnet101conv4", "resnet101conv5"]:
         if args.aggregation in ["cls", "seqpool"]:
             raise ValueError(f"CNNs like {args.backbone} can't work with aggregation {args.aggregation}")
     if args.backbone in ["cct384"]:
@@ -135,4 +135,3 @@ def parse_arguments():
             raise ValueError(f"ViT can't work with aggregation {args.aggregation}. Please use one among [netvlad, gem, cls]")
 
     return args
-

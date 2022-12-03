@@ -2,7 +2,7 @@
 """
 With this script you can evaluate checkpoints or test models from two popular
 landmark retrieval github repos.
-The first is https://github.com/naver/deep-image-retrieval from Naver labs, 
+The first is https://github.com/naver/deep-image-retrieval from Naver labs,
 provides ResNet-50 and ResNet-101 trained with AP on Google Landmarks 18 clean.
 $ python eval.py --off_the_shelf=naver --l2=none --backbone=resnet101conv5 --aggregation=gem --fc_output_dim=2048
 
@@ -107,4 +107,3 @@ recalls, recalls_str = test.test(args, test_ds, model, args.test_method, pca)
 logging.info(f"Recalls on {test_ds}: {recalls_str}")
 
 logging.info(f"Finished in {str(datetime.now() - start_time)[:-7]}")
-

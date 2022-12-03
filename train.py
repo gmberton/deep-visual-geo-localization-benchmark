@@ -10,7 +10,6 @@ from os.path import join
 from datetime import datetime
 import torchvision.transforms as transforms
 from torch.utils.data.dataloader import DataLoader
-torch.backends.cudnn.benchmark= True  # Provides a speedup
 
 import util
 import test
@@ -21,6 +20,7 @@ from model import network
 from model.sync_batchnorm import convert_model
 from model.functional import sare_ind, sare_joint
 
+torch.backends.cudnn.benchmark = True  # Provides a speedup
 #### Initial setup: parser, logging...
 args = parser.parse_arguments()
 start_time = datetime.now()
@@ -58,14 +58,14 @@ model = torch.nn.DataParallel(model)
 if args.aggregation == "crn":
     crn_params = list(model.module.aggregation.crn.parameters())
     net_params = list(model.module.backbone.parameters()) + \
-                  list([m[1] for m in model.module.aggregation.named_parameters() if not m[0].startswith('crn')])
+        list([m[1] for m in model.module.aggregation.named_parameters() if not m[0].startswith('crn')])
     if args.optim == "adam":
         optimizer = torch.optim.Adam([{'params': crn_params, 'lr': args.lr_crn_layer},
                                       {'params': net_params, 'lr': args.lr_crn_net}])
         logging.info("You're using CRN with Adam, it is advised to use SGD")
     elif args.optim == "sgd":
         optimizer = torch.optim.SGD([{'params': crn_params, 'lr': args.lr_crn_layer, 'momentum': 0.9, 'weight_decay': 0.001},
-                                      {'params': net_params, 'lr': args.lr_crn_net, 'momentum': 0.9, 'weight_decay': 0.001}])
+                                     {'params': net_params, 'lr': args.lr_crn_net, 'momentum': 0.9, 'weight_decay': 0.001}])
 else:
     if args.optim == "adam":
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -107,7 +107,7 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
     logging.info(f"Start training epoch: {epoch_num:02d}")
     
     epoch_start_time = datetime.now()
-    epoch_losses = np.zeros((0,1), dtype=np.float32)
+    epoch_losses = np.zeros((0, 1), dtype=np.float32)
     
     # How many loops should an epoch last (default is 5000/1000=5)
     loops_num = math.ceil(args.queries_per_epoch / args.cache_refresh_rate)
@@ -122,7 +122,7 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
         triplets_dl = DataLoader(dataset=triplets_ds, num_workers=args.num_workers,
                                  batch_size=args.train_batch_size,
                                  collate_fn=datasets_ws.collate_fn,
-                                 pin_memory=(args.device=="cuda"),
+                                 pin_memory=(args.device == "cuda"),
                                  drop_last=True)
         
         model = model.train()
@@ -187,7 +187,8 @@ for epoch_num in range(start_epoch_num, args.epochs_num):
     is_best = recalls[1] > best_r5
     
     # Save checkpoint, which contains all training parameters
-    util.save_checkpoint(args, {"epoch_num": epoch_num, "model_state_dict": model.state_dict(),
+    util.save_checkpoint(args, {
+        "epoch_num": epoch_num, "model_state_dict": model.state_dict(),
         "optimizer_state_dict": optimizer.state_dict(), "recalls": recalls, "best_r5": best_r5,
         "not_improved_num": not_improved_num
     }, is_best, filename="last_model.pth")
@@ -214,4 +215,3 @@ model.load_state_dict(best_model_state_dict)
 
 recalls, recalls_str = test.test(args, test_ds, model, test_method=args.test_method)
 logging.info(f"Recalls on {test_ds}: {recalls_str}")
-
