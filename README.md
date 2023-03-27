@@ -1,5 +1,5 @@
 # Deep Visual Geo-localization Benchmark
-This is the official repository for the CVPR 2022 (Oral) paper [Deep Visual Geo-localization Benchmark](https://arxiv.org/abs/2204.03444).
+This is the official repository for the CVPR 2022 Oral paper [Deep Visual Geo-localization Benchmark](https://arxiv.org/abs/2204.03444).
 It can be used to reproduce results from the paper, and to compute a wide range of experiments, by changing the components of a Visual Geo-localization pipeline.
 
 <img src="https://github.com/gmberton/gmberton.github.io/blob/main/images/vg_system.png" width="90%">
