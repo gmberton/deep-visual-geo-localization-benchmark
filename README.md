@@ -153,6 +153,13 @@ We are currently exploring hosting options, so this is a partial list of models.
 			<td><a href="https://drive.google.com/file/d/1Iondvd8P3vb3piHFTA-RUgTFpqh0I31M/view?usp=sharing">[Link]</a></td>
 	 	</tr>
 	 	<tr>
+			<td> ViT(224)-CLS </td>
+			<td> _ </td> <td> _ </td>
+			<td> _ </td>
+			<td> 80.4 </td> <td> 69.3 </td>
+			<td><a href="https://drive.google.com/file/d/1mPiIqFKnW1HWtXqKJhLLmIgMWoV14auG/view?usp=sharing">[Link]</a></td>
+	 	</tr>
+	 	<tr>
 			<td>vgg16-netvlad</td>
 			<td>83.2</td> <td>50.9</td>
 			<td><a href="https://drive.google.com/file/d/14s7OZor6wrlGBKeXr0vKbPfTzlW9preM/view?usp=sharing">[Link]</a></td>
