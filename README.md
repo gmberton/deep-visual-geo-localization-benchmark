@@ -24,7 +24,7 @@ Before you begin experimenting with this toolbox, your dataset should be organiz
                     ├── database
                     └── queries
 ```
-The [datasets_vg](https://github.com/gmberton/datasets_vg) repo can be used to download a number of datasets. Detailed instructions on how to download datasets are in the repo. Note that many datasets are available, and _pitts30k_ is just an example.
+The [VPR-datasets-downloader](https://github.com/gmberton/VPR-datasets-downloader) repo can be used to download a number of datasets. Detailed instructions on how to download datasets are in the repo. Note that many datasets are available, and _pitts30k_ is just an example.
 
 ## Running experiments
 ### Basic experiment
