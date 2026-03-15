@@ -360,14 +360,13 @@ We are currently exploring hosting options, so this is a partial list of models.
 
 
 If you find our work useful in your research please consider citing our paper:
-```
-@inProceedings{Berton_CVPR_2022_benchmark,
-    author    = {Berton, Gabriele and Mereu, Riccardo and Trivigno, Gabriele and Masone, Carlo and
-                 Csurka, Gabriela and Sattler, Torsten and Caputo, Barbara},
-    title     = {Deep Visual Geo-localization Benchmark},
-    booktitle = {CVPR},
+```bibtex
+@inproceedings{Berton_CVPR_2022_benchmark,
+    author    = {Berton, Gabriele and Mereu, Riccardo and Trivigno, Gabriele and Masone, Carlo and Csurka, Gabriela and Sattler, Torsten and Caputo, Barbara},
+    title     = {Deep Visual Geo-Localization Benchmark},
+    booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition},
     month     = {June},
-    year      = {2022},
+    year      = {2022}
 }
 ```
 
